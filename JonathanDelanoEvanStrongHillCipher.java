@@ -23,8 +23,21 @@ public class JonathanDelanoEvanStrongHillCipher {
     }
 
     int[][] findDecryptionKey(int[][] encryptionKey){
+        int a = encryptionKey[0][0];
+        int b = encryptionKey[0][1];
+        int c = encryptionKey[1][0];
+        int d = encryptionKey[1][1];
 
-        return new int[2][2];
+        int Zed = (a * d)  - (b * c);
+        int Zedmod = Zed % 26;
+        int xgcd = xgcd(Zedmod, 26);
+
+        d = (a*xgcd) % 26;
+        a = (d * xgcd) % 26;
+        b = (-b * xgcd) % 26;
+        c = (-c * xgcd) % 26;
+
+        return encryptionKey;
     }
 
     int[] encrypt(int[] plaintext, int[][] encryptionKey){
