@@ -40,11 +40,33 @@ public class JonathanDelanoEvanStrongHillCipher {
         return encryptionKey;
     }
 
-    int[] encrypt(int[] plaintext, int[][] encryptionKey){
-        int[] ret = new int[1];
-        return ret;
+   int[] encrypt(int[] plaintext, int[][] encryptionKey) {
+    
+    int length = plaintext.length;
+    int[] cipher = new int[length];
+
+    for (int i = 0; i < cipher.length; i += 2) {
+        int p1 = plaintext[i];
+        int p2;
+
+        if (i + 1 < length){
+            p2 = plaintext[i + 1];
+        }
+        else{
+            p2 = 25;
+        }
+
+        cipher[i]     = (encryptionKey[0][0] * p1 + encryptionKey[0][1] * p2) % 26;
+
+        if(i + 1 < length){
+        cipher[i + 1] = (encryptionKey[1][0] * p1 + encryptionKey[1][1] * p2) % 26;
+        }
     }
-    int[] decrypt(int[] ciphertext, int[][] decryptionKey){
+
+    return cipher;
+}
+
+    int[] decrypt(int[] cipher, int[][] decryptionKey){
         int[] ret = new int[1];
         return ret;
     }
