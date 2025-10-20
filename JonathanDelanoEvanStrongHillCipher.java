@@ -1,4 +1,6 @@
 public class JonathanDelanoEvanStrongHillCipher {
+    
+
     public int xgcd(int inE, int inZ) {
         int T = 0;
         int newT = 1;
@@ -43,9 +45,9 @@ public class JonathanDelanoEvanStrongHillCipher {
    int[] encrypt(int[] plaintext, int[][] encryptionKey) {
     
     int length = plaintext.length;
-    int[] cipher = new int[length];
+    int[] ret = new int[length];
 
-    for (int i = 0; i < cipher.length; i += 2) {
+    for (int i = 0; i < length; i += 2) {
         int p1 = plaintext[i];
         int p2;
 
@@ -56,19 +58,65 @@ public class JonathanDelanoEvanStrongHillCipher {
             p2 = 25;
         }
 
-        cipher[i]     = (encryptionKey[0][0] * p1 + encryptionKey[0][1] * p2) % 26;
+        ret[i]     = (encryptionKey[0][0] * p1 + encryptionKey[0][1] * p2) % 26;
 
         if(i + 1 < length){
-        cipher[i + 1] = (encryptionKey[1][0] * p1 + encryptionKey[1][1] * p2) % 26;
+        ret[i + 1] = (encryptionKey[1][0] * p1 + encryptionKey[1][1] * p2) % 26;
         }
     }
 
-    return cipher;
+    return ret;
 }
 
     int[] decrypt(int[] cipher, int[][] decryptionKey){
-        int[] ret = new int[1];
+        int length = cipher.length;
+        int[] ret = new int[length];
+
+        for(int i = 0; i < length; i+=2){
+            int p1 = cipher[i];
+            int p2 = cipher[i + 1];
+            ret[i]     = (decryptionKey[0][0] * p1 + decryptionKey[0][1] * p2) % 26;
+            ret[i + 1] = (decryptionKey[1][0] * p1 + decryptionKey[1][1] * p2) % 26;
+        }
+
+        
         return ret;
+    }
+
+       public static void main (String[] args){
+        JonathanDelanoEvanStrongHillCipher hillCipher = new JonathanDelanoEvanStrongHillCipher();
+
+        int[][] encryptionKey = {
+            {16, 9},
+            {7, 14}
+        };
+        String plaintext = "JMUISCOOL";
+        int[] plaintextNums = new int[plaintext.length()];
+        for (int i = 0; i < plaintext.length(); i++){
+            plaintextNums[i] = plaintext.charAt(i);
+        }
+
+        int[] cipherNums = hillCipher.encrypt(plaintextNums, encryptionKey);
+
+        int[][] decryptionKey = hillCipher.findDecryptionKey(encryptionKey);
+
+        int[] decryptNums = hillCipher.decrypt(cipherNums, decryptionKey);
+
+
+        System.out.print("Encryption: ");
+        for (int i = 0; i < cipherNums.length; i++) {
+        System.out.print(cipherNums[i]);
+        }
+        System.out.println();
+
+        System.out.print("Decryption: ");
+        for (int i = 0; i < decryptNums.length; i++) {
+        System.out.println(decryptNums[i]);
+        }
+        System.out.println();
+
+
+
     }
 
 }
