@@ -32,8 +32,10 @@ public class JonathanDelanoEvanStrongHillCipher {
         int Zedmod = Zed % 26;
         int xgcd = xgcd(Zedmod, 26);
 
-        d = (a*xgcd) % 26;
-        a = (d * xgcd) % 26;
+        int temp = d;
+
+        d = (a * xgcd) % 26;
+        a = (temp * xgcd) % 26;
         b = (-b * xgcd) % 26;
         c = (-c * xgcd) % 26;
 
@@ -41,11 +43,11 @@ public class JonathanDelanoEvanStrongHillCipher {
     }
 
     int[] encrypt(int[] plaintext, int[][] encryptionKey){
-        int[] ret = new int[1];
+        int[] ret = new int[];
         return ret;
     }
     int[] decrypt(int[] ciphertext, int[][] decryptionKey){
-        int[] ret = new int[1];
+        int[] ret = new int[ciphertext.length];
         return ret;
     }
 
