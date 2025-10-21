@@ -102,12 +102,12 @@ public class JonathanDelanoEvanStrongHillCipher {
         JonathanDelanoEvanStrongHillCipher hillCipher = new JonathanDelanoEvanStrongHillCipher();
 
 
-        System.out.println("Decryption Key: 8, 19");
-        System.out.println("                9, 24");
+        System.out.println("Decryption Key: 8, 9");
+        System.out.println("                19, 24");
 
         int[][] encryptionKey = {
-            {16, 9},
-            {7, 14}
+            {16, 7},
+            {9, 14}
         };
         String plaintext = "JMUISCOOL";
         String toDecrypt = "MQGVGQSMJI";
@@ -124,7 +124,7 @@ public class JonathanDelanoEvanStrongHillCipher {
             toDecryptNums[i] = toDecrypt.charAt(i) - 'A'; 
         }
         if ((toDecrypt.length() % 2) == 1) {
-        toDecryptNums[toDecryptNums.length - 1] = 25; // 'Z'
+            toDecryptNums[toDecryptNums.length - 1] = 25;
     }
 
 
@@ -135,18 +135,7 @@ public class JonathanDelanoEvanStrongHillCipher {
 
         int[] decryptNums = hillCipher.decrypt(cipherNums, decryptionKey);
 
-
-        System.out.print("Encryption: ");
-        for (int i = 0; i < cipherNums.length; i++) {
-        System.out.print(cipherNums[i]);
-        }
-        System.out.println();
-
-        System.out.print("Decryption: ");
-        for (int i = 0; i < decryptNums.length; i++) {
-        System.out.print(toDecryptNums[i]);
-        }
-        System.out.println();
+        int[] toDecryptNums2 = hillCipher.decrypt(toDecryptNums, decryptionKey);
 
 
         System.out.print("Encryption: ");
@@ -154,9 +143,14 @@ public class JonathanDelanoEvanStrongHillCipher {
         System.out.println();
 
         System.out.print("Decryption: ");
-        for (int v : toDecryptNums) System.out.print((char) ('A' + mod26(v)));
+        for (int v : decryptNums) System.out.print((char) ('A' + mod26(v)));
         System.out.println();
 
+        System.out.println("Encryption2: MQGVGQSMJI");
+
+         System.out.print("Decryption2: ");
+        for (int v : toDecryptNums2) System.out.print((char) ('A' + mod26(v)));
+        System.out.println();
 
 
     }
