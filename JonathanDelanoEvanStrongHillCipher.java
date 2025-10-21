@@ -24,24 +24,36 @@ public class JonathanDelanoEvanStrongHillCipher {
         return (T % inZ + inZ) % inZ;
     }
 
+    static int mod26(int x) {
+         int r = x % 26; 
+         return r < 0 ? r + 26 : r; 
+        }
+
+
     int[][] findDecryptionKey(int[][] encryptionKey){
         int a = encryptionKey[0][0];
         int b = encryptionKey[0][1];
         int c = encryptionKey[1][0];
         int d = encryptionKey[1][1];
 
-        int Zed = (a * d)  - (b * c);
-        int Zedmod = Zed % 26;
-        int xgcd = xgcd(Zedmod, 26);
+        int det = mod26(a * d - b * c);
+        int detInv = xgcd(det, 26);
 
-        int temp = d;
+        int[][] inv = new int[2][2];
+        inv[0][0] = mod26(detInv * d);
+        inv[0][1] = mod26(detInv * (-b));
+        inv[1][0] = mod26(detInv * (-c));
+        inv[1][1] = mod26(detInv * a);
 
-        d = (a * xgcd) % 26;
-        a = (temp * xgcd) % 26;
-        b = (-b * xgcd) % 26;
-        c = (-c * xgcd) % 26;
+        for(int i=0; i < inv.length; i++){
+            for (int j=0; j < inv.length; j++){
+                //System.out.println("J" + inv[i][j]);
+            }
+        }
 
-        return encryptionKey;
+        return inv;
+
+
     }
 
    int[] encrypt(int[] plaintext, int[][] encryptionKey) {
@@ -49,7 +61,7 @@ public class JonathanDelanoEvanStrongHillCipher {
     int length = plaintext.length;
     int[] ret = new int[length];
 
-    for (int i = 0; i < length - 1; i += 2) {
+    for (int i = 0; i < length; i += 2) {
         int p1 = plaintext[i];
         int p2;
 
@@ -60,11 +72,11 @@ public class JonathanDelanoEvanStrongHillCipher {
             p2 = 25;
         }
 
-        ret[i]     = (encryptionKey[0][0] * p1 + encryptionKey[0][1] * p2) % 26;
-
-        if(i + 1 < length){
-        ret[i + 1] = (encryptionKey[1][0] * p1 + encryptionKey[1][1] * p2) % 26;
+        ret[i]     = mod26(encryptionKey[0][0] * p1 + encryptionKey[0][1] * p2);
+        if (i + 1 < length) {
+            ret[i + 1] = mod26(encryptionKey[1][0] * p1 + encryptionKey[1][1] * p2);
         }
+
     }
 
     return ret;
@@ -74,11 +86,12 @@ public class JonathanDelanoEvanStrongHillCipher {
         int length = cipher.length;
         int[] ret = new int[length];
 
-        for(int i = 0; i < length - 1; i+=2){
+        for(int i = 0; i < length; i+=2){
             int p1 = cipher[i];
             int p2 = cipher[i + 1];
-            ret[i]     = (decryptionKey[0][0] * p1 + decryptionKey[0][1] * p2) % 26;
-            ret[i + 1] = (decryptionKey[1][0] * p1 + decryptionKey[1][1] * p2) % 26;
+            ret[i]     = mod26(decryptionKey[0][0] * p1 + decryptionKey[0][1] * p2);
+            ret[i + 1] = mod26(decryptionKey[1][0] * p1 + decryptionKey[1][1] * p2);
+
         }
 
         
@@ -88,15 +101,33 @@ public class JonathanDelanoEvanStrongHillCipher {
        public static void main (String[] args){
         JonathanDelanoEvanStrongHillCipher hillCipher = new JonathanDelanoEvanStrongHillCipher();
 
+
+        System.out.println("Decryption Key: 8, 19");
+        System.out.println("                9, 24");
+
         int[][] encryptionKey = {
             {16, 9},
             {7, 14}
         };
         String plaintext = "JMUISCOOL";
-        int[] plaintextNums = new int[plaintext.length()];
+        String toDecrypt = "MQGVGQSMJI";
+        int[] plaintextNums = new int[plaintext.length() + (plaintext.length() % 2)]; 
         for (int i = 0; i < plaintext.length(); i++){
-            plaintextNums[i] = plaintext.charAt(i);
+            plaintextNums[i] = plaintext.charAt(i) - 'A'; 
         }
+        if ((plaintext.length() % 2) == 1) {
+            plaintextNums[plaintextNums.length - 1] = 25; 
+        }
+
+        int[] toDecryptNums = new int[toDecrypt.length() + (toDecrypt.length() % 2)]; 
+        for (int i = 0; i < toDecrypt.length(); i++){
+            toDecryptNums[i] = toDecrypt.charAt(i) - 'A'; 
+        }
+        if ((toDecrypt.length() % 2) == 1) {
+        toDecryptNums[toDecryptNums.length - 1] = 25; // 'Z'
+    }
+
+
 
         int[] cipherNums = hillCipher.encrypt(plaintextNums, encryptionKey);
 
@@ -113,8 +144,17 @@ public class JonathanDelanoEvanStrongHillCipher {
 
         System.out.print("Decryption: ");
         for (int i = 0; i < decryptNums.length; i++) {
-        System.out.println(decryptNums[i]);
+        System.out.print(toDecryptNums[i]);
         }
+        System.out.println();
+
+
+        System.out.print("Encryption: ");
+        for (int v : cipherNums) System.out.print((char) ('A' + mod26(v)));
+        System.out.println();
+
+        System.out.print("Decryption: ");
+        for (int v : toDecryptNums) System.out.print((char) ('A' + mod26(v)));
         System.out.println();
 
 
