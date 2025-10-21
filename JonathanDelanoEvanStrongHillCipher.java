@@ -49,7 +49,7 @@ public class JonathanDelanoEvanStrongHillCipher {
     int length = plaintext.length;
     int[] ret = new int[length];
 
-    for (int i = 0; i < length; i += 2) {
+    for (int i = 0; i < length - 1; i += 2) {
         int p1 = plaintext[i];
         int p2;
 
@@ -74,7 +74,7 @@ public class JonathanDelanoEvanStrongHillCipher {
         int length = cipher.length;
         int[] ret = new int[length];
 
-        for(int i = 0; i < length; i+=2){
+        for(int i = 0; i < length - 1; i+=2){
             int p1 = cipher[i];
             int p2 = cipher[i + 1];
             ret[i]     = (decryptionKey[0][0] * p1 + decryptionKey[0][1] * p2) % 26;
